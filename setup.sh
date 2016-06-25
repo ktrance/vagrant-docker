@@ -1,27 +1,14 @@
 #!/usr/bin/env bash
 
-echo "<============= updating key =============>"
+echo "<============= updating =============>"
 apt-get update
-apt-get install apt-transport-https ca-certificates
-apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+apt-get dist-upgrade -qy
 
-echo "<============= updating sources =============>"
-echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" > docker.list
-mv -f  docker.list /etc/apt/sources.list.d/
-apt-get update
+echo "<============= installing extras =============>"
+apt-get install linux-image-extra-$(uname -r) -qy 
 
-echo "<============= purging =============>"
-apt-get purge lxc-docker
+echo "<============= installing docker =============>"
+apt-get install docker.io -qy
 
-echo "<============= installing headers =============>"
-apt-get install linux-image-extra-$(uname -r) -qy --force-yes
-
-echo "<============= installing docker-engine =============>"
-apt-get install docker-engine -qy --force-yes
-
-echo "<============= installing docker-compose =============>"
-curl -s -L https://github.com/docker/compose/releases/download/1.6.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
-chmod +x /usr/local/bin/docker-compose
-
-echo "<============= updating group =============>"
-usermod -aG docker vagrant
+echo "<============= ips =============>"
+ifconfig | grep "inet addr"
